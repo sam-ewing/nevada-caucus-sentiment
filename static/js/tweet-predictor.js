@@ -119,88 +119,90 @@ function tweet_analyzer() {
 // Initialize the page by calling the function
 tweet_analyzer()
 
+// Data from informative-features.js
+var word_data = feature_data;
+
 // Populate Model Word Sentiment table and create Plot
-d3.csv("/static/js/test-data/informative_features_modified-2.csv").then(function(word_data) {
 
-    // Create the table
-    var word_weight_table = d3.select("#word-weight-tag")
+// Create the table
+var word_weight_table = d3.select("#word-weight-tag")
 
-    word_weight_table.selectAll('tr').remove();
+word_weight_table.selectAll('tr').remove();
 
-    function Build_Word_Table(array) {
-        
-        array.forEach(word => {
+function Build_Word_Table(array) {
     
+    array.forEach(word => {
 
-        var word_table_row = word_weight_table.append('tr');
-            
-        Object.entries(word).forEach(([key, value]) => {
-            word_table_row
-                .append('td')
-                .attr('class', 'table-item-center')
-                .text(value)
-            });
 
-            
-        });
-    }
-    Build_Word_Table(word_data)
-
-    word_list = []
-
-        // Unpack data from the API into an list for easy iteration
-        word_data.forEach((item) => {
-
-            var item_list = []
-
-            // Iterate through each key/value
-            Object.entries(item).forEach(([key, value]) => {
+    var word_table_row = word_weight_table.append('tr');
         
-            // Add all values relevant to one timepoint to timepoint_list
-            item_list.push(value)
-            })
+    Object.entries(word).forEach(([key, value]) => {
+        word_table_row
+            .append('td')
+            .attr('class', 'table-item-center')
+            .text(value)
+        });
 
-            // Append the timepoint data to the master Period List
-            word_list.push(item_list)
+        
+    });
+}
+Build_Word_Table(word_data)
+
+word_list = []
+
+    // Unpack data from the API into an list for easy iteration
+    word_data.forEach((item) => {
+
+        var item_list = []
+
+        // Iterate through each key/value
+        Object.entries(item).forEach(([key, value]) => {
+    
+        // Add all values relevant to one timepoint to timepoint_list
+        item_list.push(value)
         })
 
-    sent_graph_word_list = []
-    sent_graph_value_list = []
-
-    word_list.forEach((item) => {
-        sent_graph_word_list.push(item[0])
-        sent_graph_value_list.push(parseFloat(item[2]))
+        // Append the timepoint data to the master Period List
+        word_list.push(item_list)
     })
-    
+
+sent_graph_word_list = []
+sent_graph_value_list = []
+
+word_list.forEach((item) => {
+    sent_graph_word_list.push(item[0])
+    sent_graph_value_list.push(parseFloat(item[2]))
+})
 
 
 
-    // Line Chart to display how sentiment is weighted
-    var trace1 = {
-      x: sent_graph_word_list,
-      y: sent_graph_value_list,
-      type: "line"
-    };
 
-    var sent_graph_data = [trace1];
+// Line Chart to display how sentiment is weighted
+var trace1 = {
+    x: sent_graph_word_list,
+    y: sent_graph_value_list,
+    type: "line"
+};
 
-    var sent_graph_layout = {
-        title: "Model Word Sentiment Value",
+var sent_graph_data = [trace1];
 
-        xaxis: {
-            title: "Words"
-        },
+var sent_graph_layout = {
+    title: "Model Word Sentiment Value",
 
-        yaxis: {
-            title: "Sentiment Value"
-        }
+    xaxis: {
+        title: "Words"
+    },
 
-    };
-
-    var responsive_functionality = {
-        responsive: true
+    yaxis: {
+        title: "Sentiment Value"
     }
 
-    Plotly.newPlot("sentiment-line-chart", sent_graph_data, sent_graph_layout, responsive_functionality)
+};
 
-  });
+var responsive_functionality = {
+    responsive: true
+}
+
+Plotly.newPlot("sentiment-line-chart", sent_graph_data, sent_graph_layout, responsive_functionality)
+
+  
