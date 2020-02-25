@@ -5,7 +5,7 @@ var submit_button = d3.select("#tweet-submit-button");
 submit_button.on("click", tweet_analyzer)
     
 function tweet_analyzer() {
-
+    
     
     
     // Select the text predictor input element and retrieve the value
