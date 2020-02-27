@@ -7,13 +7,13 @@ submit_button.on("click", tweet_analyzer)
 function tweet_analyzer() {
     
     
-    
     // Select the text predictor input element and retrieve the value
     var text_predictor_input = d3.select("#text-form-input");
     var inputValue = text_predictor_input.property("value");
 
-
+   
     
+
     var full_tweet_output_field = d3.select("#text-input-output-field")
     var sentiment_prediction_field = d3.select("#sentiment-prediction-output")
     var predicted_positive_percent = d3.select("#predicted-positive-percent-tag")
@@ -25,50 +25,90 @@ function tweet_analyzer() {
     // If input value is blank, return a message
     if (inputValue!== ``) {
 
-        console.log("Input value received: ", inputValue);
-
-        // Wipe any values already displayed
-        full_tweet_output_field.selectAll('p').remove();
-        predicted_positive_percent.selectAll('p').remove();
-        predicted_negative_percent.selectAll('p').remove();
-        predicted_neutral_percent.selectAll('p').remove();
+        // Packaging the input text for the API
+        var packaged_input_text= `"${inputValue}"`
         
-        // Display the text that the user wants analyzed in the output field
-        full_tweet_output_field
-            .append('p')
-            .attr('id', 'tweet-output-format')
-            .text(`"${inputValue}"`);
+        // API Base URL that the data will be sent to
+        var model_api_url = "https://twitter-sentiment-app-du.herokuapp.com/api/v1/tweet_predictor/"
+        
+        
+        // Build the full URL by appending the packaged text to the base URL
+        var tweet_api_destination = model_api_url + packaged_input_text
 
-        // Display the model's prediction for the input value
+        
+        // Make a JSON call to the API to retrieve the data
+        d3.json(tweet_api_destination).then(function(retrieved_tweet_data) { 
 
-        sentiment_prediction_field.selectAll('p').remove();
+            
 
-        if (sentiment_prediction === "Positive") {
-            sentiment_prediction_field
+            console.log("Input value received: ", packaged_input_text);
+            
+
+            var data_unpack_layer_one= retrieved_tweet_data
+            var {Sentiment: sentiment_data} = data_unpack_layer_one
+
+            var data_unpack_layer_two = sentiment_data
+            var {
+                Tweet: returned_tweet_text, 
+                Overall_Sentiment: returned_tweet_overall,
+                Negative_Percent: returned_tweet_negative_percent,
+                Positive_Percent: returned_tweet_positive_percent,
+                General_Percent: returned_tweet_general_percent
+            } = data_unpack_layer_two
+
+            
+
+            // Wipe any values already displayed
+            full_tweet_output_field.selectAll('p').remove();
+            predicted_positive_percent.selectAll('p').remove();
+            predicted_negative_percent.selectAll('p').remove();
+            predicted_neutral_percent.selectAll('p').remove();
+            
+            // Display the text that the user wants analyzed in the output field
+            full_tweet_output_field
                 .append('p')
-                .attr('id', 'sentiment-prediction-positive')
-                .text("POSITIVE")
-        } else {
-            sentiment_prediction_field
+                .attr('id', 'tweet-output-format')
+                .text(returned_tweet_text);
+
+            // Display the model's prediction for the input value
+
+            sentiment_prediction_field.selectAll('p').remove();
+
+            if (returned_tweet_overall === "pos") {
+                sentiment_prediction_field
+                    .append('p')
+                    .attr('id', 'sentiment-prediction-positive')
+                    .text("POSITIVE")
+            } else if (returned_tweet_overall === "neg") {
+                sentiment_prediction_field
+                    .append('p')
+                    .attr('id', 'sentiment-prediction-negative')
+                    .text("NEGATIVE")
+            } else {
+                sentiment_prediction_field
+                    .append('p')
+                    .attr('id', 'sentiment-prediction-neutral')
+                    .text("NEUTRAL")
+            }
+
+            predicted_positive_percent
                 .append('p')
-                .attr('id', 'sentiment-prediction-negative')
-                .text("NEGATIVE")
-        }
+                .attr('id', 'predicted-percent-pos')
+                .text(`${returned_tweet_positive_percent}%`)
 
-        predicted_positive_percent
-            .append('p')
-            .attr('id', 'predicted-percent-pos')
-            .text(`${selected_time_positive_score}%`)
+            predicted_negative_percent
+                .append('p')
+                .attr('id', 'predicted-percent-neg')
+                .text(`${returned_tweet_negative_percent}%`)
 
-        predicted_negative_percent
-            .append('p')
-            .attr('id', 'predicted-percent-neg')
-            .text(`${selected_time_negative_score}%`)
+            predicted_neutral_percent 
+                .append('p')
+                .attr('id', 'predicted-general-percent')
+                .text(`${returned_tweet_general_percent}%`)
+        })
+        
 
-        predicted_neutral_percent 
-            .append('p')
-            .attr('id', 'predicted-general-percent')
-            .text(`${selected_time_general_score}%`)
+        
 
 
     // The Else clause of this if-statement handles situations when there is no value in the input field
@@ -166,11 +206,16 @@ word_list = []
         word_list.push(item_list)
     })
 
+// Sent graph word list collects the words and is used as the X-values in the graph
 sent_graph_word_list = []
+
+// Sent graph value list collects the sentiment values and is used as the Y-values in the graph
 sent_graph_value_list = []
 
 word_list.forEach((item) => {
+    // Collect the words
     sent_graph_word_list.push(item[0])
+    // Collect the sentiment values
     sent_graph_value_list.push(parseFloat(item[2]))
 })
 
@@ -178,13 +223,13 @@ word_list.forEach((item) => {
 
 
 // Line Chart to display how sentiment is weighted
-var trace1 = {
+var trace = {
     x: sent_graph_word_list,
     y: sent_graph_value_list,
     type: "line"
 };
 
-var sent_graph_data = [trace1];
+var sent_graph_data = [trace];
 
 var sent_graph_layout = {
     title: "Model Word Sentiment Value",

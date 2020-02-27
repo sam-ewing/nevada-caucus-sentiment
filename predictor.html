@@ -19,6 +19,7 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     
+        
     </head>
 
 
@@ -32,7 +33,7 @@
                 <h1 class="display-4" id="jumbotron-title">2020 Nevada Caucus Sentiment Analysis</h1>
                 <br/>
                 <br/>
-                <p class="lead" id="jumbotron-subtitle">Compiled by David Born, Sam Ewing and Pranav Jayanth</p>
+                <p class="lead" id="jumbotron-subtitle">Compiled by David Born, Sam Ewing, Pranav Jayanth and Llorrvic Valles</p>
                 
 
                 <!-- Nav bar -->
@@ -146,8 +147,48 @@
                         </div>
                     </div>
                 </div> <!--ROW END-->
+
+                <br/>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="button-center">
+                            <!-- BUTTON ACTIVATES MODAL BELOW -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalLong" style="font-size: 12px;">
+                                Why did I get this result?
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
+
+        <!-- Modal (ACTIVATED BY CLICKING THE "WHY DID I GET THIS RESULT?" BUTTON)-->
+        <div class="modal fade in" id="ModalLong" tabindex="-1" role="dialog" aria-labelledby="ModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h3 class="modal-title" id="ModalLongTitle">Why did I get this result?</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+            
+                    <div class="modal-body">
+                        <p id="about-text">When a submission is made to our Machine Learning model, the model activates and utilizes the Natural Language Tool-Kit (NLTK) to analyze each word. When performing this analysis, some general words (such as "I," "you," "the," "do," "it" etc.) are removed from the analysis (but <i>not from the input</i>). Each word is then applied to a "Bag of Words," which measures how many times that word appears in a positive or a negative context. The input is then applied to a Naive-Bayes Classifier, which classifies each word as positive or negative based on its bag of words values. Words with a higher count in the positive bag of words have a higher probability of being labeled as positive, and vice-versa.</p> 
+                        <p id="about-text">However, before the model could be applied to our data, it had to be "trained" to recognize positive or negative data. This was done by manually labeling a portion of our data, which required us to read individual tweets and determine whether they were positive or negative, as well as what candidates the tweets were discussing or mentioning.</p>
+                        <p id="about-text">As the model ran over the dataset in it's entirety, it applied this same analysis and weighted the words it encountered automatically and categorized them as the model deemed appropriate for that weight value.</p>
+                        <p id="about-text">An interesting caveat to this approach is that words or phrases that we associate with a certain emotion don’t necessarily have to reflect that emotion in the model. As an example, if several tweets are using the word “sick,” as in “Bernie Sanders is sick!”, "sick" becomes a positively-associated word. The probability of a word being categorized one way or another ultimately comes down to our original training of the model using "positive" and "negative" to identify whole tweets.</p>
+                        <p id="about-text">As a summary, our model was trained by reading and labeling <i>entire tweets</i>, not by pre-loading words into the algorythm with pre-defined weight values. Additionally, the sentiment label of a given word is based on it's <i>probability</i> of being positive or negative, based on the number of times that word was used in either context.</p>
+                        <p id="about-text">For an in-depth explanation of how the Naive-Bayes Classifier works, <a href="https://medium.com/@theflyingmantis/text-classification-in-nlp-naive-bayes-a606bf419f8c" target="_blank">check out this article on Medium.com</a>.</p>
+                        
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
             
                 
             <br/>
@@ -246,7 +287,7 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
     <!-- JavaScript -->
-    <script type="text/javascript" src="static/js/test-data/informative-features.js"></script>
+    <script type="text/javascript" src="static/js/test-data/informative-features-v2.js"></script>
     <script type="text/javascript" src="static/js/tweet-predictor.js"></script>
 
 </html>

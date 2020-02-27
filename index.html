@@ -32,7 +32,7 @@
                 <h1 class="display-4" id="jumbotron-title">2020 Nevada Caucus Sentiment Analysis</h1>
                 <br/>
                 <br/>
-                <p class="lead" id="jumbotron-subtitle">Compiled by David Born, Sam Ewing and Pranav Jayanth</p>
+                <p class="lead" id="jumbotron-subtitle">Compiled by David Born, Sam Ewing, Pranav Jayanth and Llorrvic Valles</p>
                 
                 
                 <!-- Nav bar -->
@@ -288,9 +288,10 @@
                                         <p id="about-text">In order to gauge how sentiment changes over time, we performed multiple scraping actions before and after important events. We decided on four primary time periods to capture and analyze, including:</p>
                                         <ul>
                                             <li id="about-text">Overall</li>
-                                            <li id="about-text">Post-Caucus</li>
+                                            
                                             <li id="about-text">Pre-Debate</li>
                                             <li id="about-text">Post-Debate</li>
+                                            <li id="about-text">Post-Caucus</li>
                                         </ul>
                                         
                                         <img src='time-diagram.png' id="image-sizing">
@@ -328,9 +329,9 @@
                                     <div class="card-header" id="headingThree">
                                         <h2 class="mb-0">
                                             <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" id="accordion-header-text-format">
-                                                <h4>3 - SQL Database</h4>
+                                                <h4>3 - Data Cleaning</h4>
                                                 <hr id="ruler-white"/>
-                                                <p id="small-acc-text">Storing and organizing our data</p>
+                                                <p id="small-acc-text">Cleansing and reformatting data for easier use</p>
                                             </button>
                                         </h2>
                                     </div>
@@ -339,7 +340,18 @@
 
                                 <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#about-accordion-menu">
                                     <div class="card-body">
-                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                            
+                                        <p id="about-text">The tweet scraping method produced four csv separate files with overlapping time frames and, therefore, duplicated tweets. The cleaning deleted duplicate tweets from the same username, timestamp, and to (recipient). Tweets with blank text were deleted (less than 200 records). The timestamp column was re-formatted to:  yyyy-mm-dd hh:mm:ss. The hours are in 24-hour time (aka military time). Quote marks were removed, so as not to interfere with javascript coding.</p>
+                                        <p id="about-text">Over the sampled time frame (February 9-25, 2020), a frequency count by username was used to identify "tweeter types":</p> 
+                                        <ul>
+                                            <li id="about-text">Heavy (over 25 tweets)</li>
+                                            <li id="about-text">Moderate (10-25 tweets)</li>
+                                            <li id="about-text">Light (less than 10 tweets)</li>
+                                        </ul>
+                                    
+                                        <p id="about-text">Suspected "bots" and "trolls" were further split out from the heavy tweeter group by manual inspection of their tweets.</p> 
+                                        <li id="about-text">"Bots" are typically tweeters sending hundreds of tweets with the same text.</li>
+                                        <li id="about-text">"Trolls" are characterized by tweeters that send hundreds of tweets with different text, but the tweets are largely malicious in nature.</li> 
                                     </div>
                                 </div>
                             </div> <!--CARD END-->
@@ -349,9 +361,9 @@
                                     <div class="card-header" id="headingFour">
                                         <h2 class="mb-0">
                                             <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour" id="accordion-header-text-format">
-                                                <h4>4 - Flask API</h4>
+                                                <h4>4 - PostgreSQL Database</h4>
                                                 <hr id="ruler-white"/>
-                                                <p id="small-acc-text">Querying the data for front-end deployment</p>
+                                                <p id="small-acc-text">Storing and organizing our data</p>
                                             </button>
                                         </h2>
                                     </div>
@@ -360,7 +372,85 @@
 
                                 <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#about-accordion-menu">
                                     <div class="card-body">
-                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                        
+                                        <p id="about-text">After cleaning, the four source files containing tweet scrapes were manually combined into one Comma-Separated Value (.csv) file before loading into Postgres. The source file was loaded unchanged into a single Postgres table and then distinct records were inserted into a second table to ensure that there were no duplicates.</p> 
+                                        <p id="about-text">A series of process queries were then executed to stage the data for the API and dashboard reporting:</p>
+                                        <ul>
+                                            <li id="about-text">A date field was created in yyyy-mm-dd format.</li>
+                                            
+                                            <li id="about-text">
+                                                A time_period field was created to assign the tweets by chronology to important caucus milestones as follows (also see diagram in the Data Retrieval section).
+                                                <ul>
+                                                    <li>Pre-Debate:	tweets from 2020-02-09 23:33:00 to before 2020-02-19 18:00:00</li>
+                                                    <li>Post-Debate:	tweets from 2020-02-19 18:00:00 to before 2020-02-22 16:00:00</li>
+                                                    <li>Post-Caucus:	tweets from 2020-02-22 16:00:00 to 2020-02-25 01:23:00</li>
+                                                </ul>
+                                            </li>
+
+                                            <li id="about-text">A random integer between 1 and 20 was assigned to each record to facilitate easy sampling.
+                                                <ul>
+                                                    <li>Because Heroku (the service hosting our API) has a 10,000 record limit, we anticipated needing to use some form of sampling to produce tweet text examples for the API.  Each integer represents roughly 5% of the data.</li>
+                                                    <li>(<strong>Note:</strong> The dashboard reporting our visualizations on the Visuals page uses 100% of the data without sampling, as it is hosted on Tableau Public.)</li>
+                                                </ul>
+                                            </li>
+                                            
+                                            <li id="about-text">Queries utilizing Postgres string wildcards (e.g., %bernie%) were utilized to search tweet text for the occurrence of candidate names. For the search, the text was transformed to lower case, thereby eliminating variations in capitalization. Where a candidate's name was detected, a separate flag field for that candidate was marked.</li>
+                                            
+                                            <li id="about-text">A final staging table was loaded with tweet records that were flagged for each candidate. Be aware that a single tweet can have multiple candidates mentioned. In that case, tweet records were loaded for each candidate mentioned, thereby intentionally creating duplicate tweets in the final staging table. This enables dashboard reporting of "tweet mentions" by candidate. If a candidate is mentioned more than once in a single tweet, that would count as one (1) tweet mention for that candidate. But if two or more candidates are mentioned in a single tweet, then that would count as one mention for each of those candidates.</li>
+                                        </ul>
+	
+                                        <p id="about-text">After staging, separate tables were populated by positive and negative tweet samples for final exporting for the API and Tableau dashboard. In addition, a summary table was created using a GROUP BY query that stored a count of candidate, sentiment, time period, date, and tweeter type. The summary table drives all the visuals on the Tableau dashboard except for the tweet samples.</p>
+                                        <p id="about-text">Possible values for the summary table dimensions are:</p>
+                                        
+                                        <ul>
+                                            <li id="about-text">Candidate:
+                                                <ul>
+                                                    <li>Biden</li>
+                                                    <li>Bloomberg</li>
+                                                    <li>Buttigieg</li>
+                                                    <li>Gabbard</li>
+                                                    <li>Klobuchar</li>
+                                                    <li>Sanders</li>
+                                                    <li>Steyer</li>
+                                                    <li>Trump</li>
+                                                    <li>Warren</li>
+                                                    <li>Yang</li>
+
+                                                </ul>
+                                            </li>
+
+                                            <li id="about-text">Sentiment:
+                                                <ul>
+                                                    <li>Negative</li>
+                                                    <li>Positive</li>
+                                                </ul>
+                                            </li>
+
+                                            <li id="about-text">Time Period:
+                                                <ul>
+                                                    <li>Pre-Debate</li>
+                                                    <li>Post-Debate</li>
+                                                    <li>Post-Caucus</li>
+                                                </ul>
+                                            </li>
+
+                                            <li id="about-text">Date:
+                                                <ul>
+                                                    <li>2020-02-09 to 2020-02-25</li>
+                                                </ul>
+                                            </li>
+
+                                            <li id="about-text">Tweeter Type:
+                                                <ul>
+                                                    <li>Bot</li>
+                                                    <li>Heavy</li>
+                                                    <li>Light</li>
+                                                    <li>Moderate</li>
+                                                    <li>Troll</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+
                                     </div>
                                 </div>
                             </div> <!--CARD END-->
@@ -370,7 +460,28 @@
                                     <div class="card-header" id="headingFive">
                                         <h2 class="mb-0">
                                             <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive" id="accordion-header-text-format">
-                                                <h4>5 - Displaying Our Data</h4>
+                                                <h4>5 - Flask API</h4>
+                                                <hr id="ruler-white"/>
+                                                <p id="small-acc-text">Querying the data for front-end deployment</p>
+                                            </button>
+                                        </h2>
+                                    </div>
+                                </div>
+                                
+
+                                <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#about-accordion-menu">
+                                    <div class="card-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                    </div>
+                                </div>
+                            </div> <!--CARD END-->
+
+                            <div class="card">
+                                <div id="accordion-header-format">
+                                    <div class="card-header" id="headingSix">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix" id="accordion-header-text-format">
+                                                <h4>6 - Displaying Our Data</h4>
                                                 <hr id="ruler-white"/>
                                                 <p id="small-acc-text">Bringing it all together</p>
                                             </button>
@@ -379,7 +490,7 @@
                                 </div>
                                 
 
-                                <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#about-accordion-menu">
+                                <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#about-accordion-menu">
                                     <div class="card-body">
 
                                         <h4>Dashboard</h4>
@@ -412,7 +523,7 @@
                                         <h4>Predictor</h4>
                                         <hr/>
 
-                                        <p id="about-text">The Predictor page allows users to test our model for themselves. The page features an input form where users can either copy a tweet they see on Twitter, or write their own "tweet" mockup. Upon submitting the value of this form, our model is activated and analyzes the value entered into this field. When the model completes its analysis, it returns both a sentiment prediction of whether the "tweet" is a positive or negative one, as well as the word-by-word analysis displaying the weighting of each word used.</p>
+                                        <p id="about-text">The Predictor page allows users to test our model for themselves. The page features an input form where users can either copy a tweet they see on Twitter, or write their own "tweet" mockup. Upon submitting the value of this form, our model is activated and analyzes the value entered into this field. When the model completes its analysis, it returns a sentiment prediction of whether the "tweet" is a positive or negative one. A table displaying the sentiment of the most heavily-weighted words discovered by our model is also dynamically generated, along with a line graph that shows how the sentiment value of these words compares to one another.</p>
                                         <p id="about-text">Like the Dashboard page, the page is designed to be dynamically populated with data upon receiving a new input using the d3.js JavaScript library. In regards to how the data is displayed, there are no hard-coded elements on this page.</p>
                                     </div>
                                 </div>
@@ -448,9 +559,9 @@
     <script src="https://d3js.org/d3.v5.min.js"></script>
 
     <!-- TEST DATA -->
+
+    <!-- <script type="text/javascript" src="static/js/test-data/testing-data-format-6.js"></script> -->
     
-    <!-- <script type="text/javascript" src="static/js/test-data/testing-data-format-5.js"></script> -->
-    <script type="text/javascript" src="static/js/test-data/testing-data-format-6.js"></script>
     <!-- JavaScript -->
     <script type="text/javascript" src="static/js/app.js"></script>
 
