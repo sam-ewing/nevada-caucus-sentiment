@@ -72,6 +72,12 @@
     color: red;
 }
 
+#overall-sentiment-neutral {
+    text-align: center;
+    font-size: 20px;
+    color: blue;
+}
+
 #percent-pos {
     text-align: center;
     font-size: 15px;

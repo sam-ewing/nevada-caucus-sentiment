@@ -120,7 +120,7 @@
                 <br/>
                                 
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-md-4">
                         <h4 id="body-header-text">Positive Percent</h4>
                         <hr/>
                         <div id="predicted-positive-percent-tag">
@@ -129,7 +129,7 @@
                         </div>
                     </div>
 
-                    <div class="col-4">
+                    <div class="col-md-4">
                         <h4 id="body-header-text">Negative Percent</h4>
                         <hr/>
                         <div id="predicted-negative-percent-tag">
@@ -138,7 +138,7 @@
                         </div>
                     </div>
 
-                    <div class="col-4">
+                    <div class="col-md-4">
                         <h4 id="body-header-text">Neutral Percent</h4>
                         <hr/>
                         <div id="predicted-general-percent-tag">
@@ -176,10 +176,15 @@
             
                     <div class="modal-body">
                         <p id="about-text">When a submission is made to our Machine Learning model, the model activates and utilizes the Natural Language Tool-Kit (NLTK) to analyze each word. When performing this analysis, some general words (such as "I," "you," "the," "do," "it" etc.) are removed from the analysis (but <i>not from the input</i>). Each word is then applied to a "Bag of Words," which measures how many times that word appears in a positive or a negative context. The input is then applied to a Naive-Bayes Classifier, which classifies each word as positive or negative based on its bag of words values. Words with a higher count in the positive bag of words have a higher probability of being labeled as positive, and vice-versa.</p> 
+                        
                         <p id="about-text">However, before the model could be applied to our data, it had to be "trained" to recognize positive or negative data. This was done by manually labeling a portion of our data, which required us to read individual tweets and determine whether they were positive or negative, as well as what candidates the tweets were discussing or mentioning.</p>
+                        
                         <p id="about-text">As the model ran over the dataset in it's entirety, it applied this same analysis and weighted the words it encountered automatically and categorized them as the model deemed appropriate for that weight value.</p>
+                        
                         <p id="about-text">An interesting caveat to this approach is that words or phrases that we associate with a certain emotion don’t necessarily have to reflect that emotion in the model. As an example, if several tweets are using the word “sick,” as in “Bernie Sanders is sick!”, "sick" becomes a positively-associated word. The probability of a word being categorized one way or another ultimately comes down to our original training of the model using "positive" and "negative" to identify whole tweets.</p>
+                        
                         <p id="about-text">As a summary, our model was trained by reading and labeling <i>entire tweets</i>, not by pre-loading words into the algorythm with pre-defined weight values. Additionally, the sentiment label of a given word is based on it's <i>probability</i> of being positive or negative, based on the number of times that word was used in either context.</p>
+                        
                         <p id="about-text">For an in-depth explanation of how the Naive-Bayes Classifier works, <a href="https://medium.com/@theflyingmantis/text-classification-in-nlp-naive-bayes-a606bf419f8c" target="_blank">check out this article on Medium.com</a>.</p>
                         
                     </div>
