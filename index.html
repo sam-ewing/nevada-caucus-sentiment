@@ -319,7 +319,24 @@
 
                                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#about-accordion-menu">
                                     <div class="card-body">
-                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                        <p id="about-text">For this project, we decided to use Machine Learning concepts to analyze sentiment on Twitter. Our first challenge was to decide how to process the tweets. To accomplish this, we chose to use Natural Language Processing (NLP) in order to break down each tweet to analyze it.</p>
+                                        
+                                        <p id="about-text">We decided to use the Natural Language Tool-kit, or NLTK, which is purpose-built NLP library for Python. The cleanup process for a tweet before creating an ML model may best be explained by using some examples – imagine the following tweet:</p>
+                                        
+                                        <li id="about-text">“It is a warm and #sunny here in Denver, Colorado! RT https//www.denverweather.com ”</li>
+                                        
+                                        <p id="about-text">The first thing we have to do is tokenize the tweet – this means that we break down the sentence into individual words:</p>
+                                        
+                                        <li id="about-text">[it],[is].[a],[warm],[and][#sunny][day]….and so on.</li>
+                                        
+                                        <p id="about-text">The next step is to remove things like hashtags and other items like retweets and hyperlinks to only get the English words. </p>
+                                        
+                                        <p id="about-text">Finally,  we create a bag of words where each instance of the word is given an equivalent weight. The concept behind bag of words is that we take each word, strip it of context (ie: it’s a grab-bag) and then we characterize/weight it. </p>
+                                    
+                                        <p id="about-text">After creating our bag of words, we can then create a testing / training data set. However, in order to create our training sample, we had to manually label each tweet as positive or negative (this involved reading individual tweets and categorizing them according to what we perceived the overall sentiment of the tweet was).</p>
+ 
+                                        <p id="about-text">Finally, we used a Naïve Bayes classifier to classify the text as positive or negative, based on each word's Bag of Words values. We then ran the entire file with the predictor to get all of our results.</p>
+                                    
                                     </div>
                                 </div>
                             </div> <!--CARD END-->
@@ -342,15 +359,22 @@
                                     <div class="card-body">
                             
                                         <p id="about-text">The tweet scraping method produced four separate Comma-Separated Value (.csv) files with overlapping time frames and, therefore, duplicated tweets. The cleaning deleted duplicate tweets from the same username, timestamp, and to (recipient). Tweets with blank text were deleted (less than 200 records). The timestamp column was re-formatted to:  yyyy-mm-dd hh:mm:ss. The hours are in 24-hour time (AKA military time). Quote marks were removed, so as not to interfere with JavaScript coding controlling front-end display.</p>
+                                        
                                         <p id="about-text">Over the sampled time frame (February 9-25, 2020), a frequency count by username was used to identify "tweeter types":</p> 
+                                        
                                         <ul>
                                             <li id="about-text">Heavy (over 25 tweets)</li>
+                                            
                                             <li id="about-text">Moderate (10-25 tweets)</li>
+                                            
                                             <li id="about-text">Light (less than 10 tweets)</li>
+                                        
                                         </ul>
                                     
                                         <p id="about-text">Suspected "bots" and "trolls" were further split out from the heavy tweeter group by manual inspection of their tweets.</p> 
+                                        
                                         <li id="about-text">"Bots" are typically tweeters sending hundreds of tweets with the same text.</li>
+                                        
                                         <li id="about-text">"Trolls" are characterized by tweeters that send hundreds of tweets with different text, but the tweets are largely malicious in nature.</li> 
                                     </div>
                                 </div>
@@ -374,8 +398,11 @@
                                     <div class="card-body">
                                         
                                         <p id="about-text">After cleaning, the four source files containing tweet scrapes were manually combined into one Comma-Separated Value (.csv) file before loading into Postgres. The source file was loaded unchanged into a single Postgres table and then distinct records were inserted into a second table to ensure that there were no duplicates.</p> 
+                                        
                                         <p id="about-text">A series of process queries were then executed to stage the data for the API and dashboard reporting:</p>
+                                        
                                         <ul>
+                                            
                                             <li id="about-text">A date field was created in yyyy-mm-dd format.</li>
                                             
                                             <li id="about-text">
@@ -400,6 +427,7 @@
                                         </ul>
 	
                                         <p id="about-text">After staging, separate tables were populated by positive and negative tweet samples for final exporting for the API and Tableau dashboard. In addition, a summary table was created using a GROUP BY query that stored a count of candidate, sentiment, time period, date, and tweeter type. The summary table drives all the visuals on the Tableau dashboard except for the tweet samples.</p>
+                                        
                                         <p id="about-text">Possible values for the summary table dimensions are:</p>
                                         
                                         <ul>
@@ -471,7 +499,31 @@
 
                                 <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#about-accordion-menu">
                                     <div class="card-body">
-                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                        <p id="about-text">With our data stored in a PostgreSQL Database, the next step was to develop an Application Program Interface (API) that could retrieve our data from the database for use on the front-end, as well as a platform to provide tools necessary to our website's functionality. To create this API, we utilized Python's Flask library.</p>
+                                        
+                                        <p id="about-text">The resulting Flask application drives two main APIs:</p>
+                                        
+                                        <ul>
+                                            <li id="about-text">Candidate API
+                                                <ul>
+                                                    <li>This API is automatically called by our Dashboard page each time it loads.</li>
+                                                </ul>
+                                            </li>
+
+                                            <li id="about-text">Tweet Predictor API
+                                                <ul>
+                                                    <li>This API is only called upon receiving an input value entered into the text field on our Predictor page. As long there is text in the text field, the API will be called when the "Predict Sentiment" button is clicked. If there is no input, the API will not be called.</li>
+                                                </ul>
+                                            </li>
+
+                                        </ul>
+                                        
+
+                                        <p id="about-text">The Candidate API was created using data from our PostgreSQL database. It retrieves the data and then converts it into a JavaScript Object Notation (JSON) format using the Python Pandas library.</p>
+
+                                        <p id="about-text">The Predictor API was created using a "pickled" (serialized) version of the initial Machine Learning model. When provided an input, the API will load the model and pass the input string into it. After performing it's analysis, the model will output a series of probability values about the sentiment of the input string. These values are returned to the website for display.</p>
+                                    
+                                        <p id="about-text">The Python Flask app that creates our API is hosted using Heroku. Because Heroku has a 10,000 record limit for data, we utilize a set of random numbers to select manageable increments of our data. For more information about how this selection process occurs, please refer to the previous section (Part 4 - PostgreSQL Database).</p>
                                     </div>
                                 </div>
                             </div> <!--CARD END-->
@@ -499,7 +551,7 @@
                                         <p id="about-text">As the webpage loads, a call is made to the API that was built in the previous step. Once the data is retrieved from the API, it is organized into a format that can easily be applied to the various dynamic website elements.</p>
                                         <p id="about-text">The d3.js JavaScript library is utilized to select labeled tags throughout the website. These selections are used as containers for our data to be dropped into. When the website is updated (either through initialization when the site is first loaded, or when a new selection is made from either of the two drop-down menus), each of these selections are called and perform the following actions:</p>
                                         <ol>
-                                            <li id="about-text">Clear any value that's already present by removing its HTML element</li>
+                                            <li id="about-text">Clear any value that's already present by removing it's HTML element</li>
                                             <li id="about-text">
                                                 Append a new HTML element to replace the old one
                                                 <ul>
